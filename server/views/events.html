@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>uLink | Administration</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/bootstrap-responsive.min.css" />
+    <link rel="stylesheet" href="css/jquery-ui.css" />
+    <link rel="stylesheet" href="css/uniform.css" />
+    <link rel="stylesheet" href="css/select2.css" />
+    <link rel="stylesheet" href="css/unicorn.main.css" />
+    <link rel="stylesheet" href="css/unicorn.grey.css" class="skin-color" />
+</head>
+<body>
+<div id="header">
+    <h1><a href="./dashboard.html">ulink Administration</a></h1>
+</div>
+
+<div id="search">
+    <input type="text" placeholder="Search here..."/><button type="submit" class="tip-right" title="Search"><i class="icon-search icon-white"></i></button>
+</div>
+<div id="user-nav" class="navbar navbar-inverse">
+    <ul class="nav btn-group">
+        <li class="btn btn-inverse" ><a title="" href="#"><i class="icon icon-user"></i> <span class="text">Profile</span></a></li>
+        <li class="btn btn-inverse"><a title="" href="/"><i class="icon icon-share-alt"></i> <span class="text">Logout</span></a></li>
+    </ul>
+</div>
+
+<div id="sidebar">
+    <a href="#" class="visible-phone"><i class="icon icon-th-list"></i>Events</a>
+    <ul>
+        <li><a href="/"><i class="icon icon-home"></i><span>Dashboard</span></a></li>
+        <li class="submenu">
+            <a href="#"><i class="icon icon-th-list"></i> <span>Events</span> <span class="label">3</span></a>
+        </li>
+    </ul>
+</div>
+
+<div id="content">
+<div id="content-header">
+    <h1>Events</h1>
+</div>
+<div id="breadcrumb">
+    <a href="#" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a>
+    <a href="#" class="current">Event Management</a>
+</div>
+<div class="container-fluid">
+<div class="row-fluid">
+<div class="span12">
+<div class="widget-box">
+<div class="widget-title">
+    <span class="icon">
+        <input type="checkbox" id="title-checkbox" name="title-checkbox" />
+    </span>
+    <h5>Events</h5>
+</div>
+<div class="widget-content nopadding">
+<table class="table table-bordered table-striped table-hover">
+<thead id="events-table">
+</thead>
+</table>
+</div>
+</div>
+</div>
+</div>
+
+<div class="row-fluid">
+    <div id="footer" class="span12">
+        2013 &copy; uLink, Inc. Administration.  All Rights Reserved.
+    </div>
+</div>
+</div>
+</div>
+<script src="js/jquery.min.js"></script>
+<script src="js/jquery.ui.custom.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/jquery.uniform.js"></script>
+<script src="js/select2.min.js"></script>
+<script src="js/jquery.dataTables.min.js"></script>
+<script src="js/unicorn.js"></script>
+<script src="js/unicorn.tables.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var socket = io.connect();
+    // on connection to server, ask for user's name with an anonymous callback
+    socket.on('connect', function(){
+        socket.emit('events:find', function(data) {
+            var html = '<tr><th>Active</th><th>Featured</th><th>School</th><th>Title</th><th>Description</th><th>Actions</th></tr>';
+            for(var x=0; x < data.response.length; x++) {
+                html += '<tr class="gradeX"><td><input id="event-active-'+data.response[x]._id+'" type="checkbox"';
+                if(data.response[x].active) {
+                   html += ' checked';
+                }
+                html += '/></td>';
+                html += '<td><input id="event-featured-'+data.response[x]._id+'" type="checkbox"';
+                if(data.response[x].featured) {
+                    html += ' checked';
+                }
+                html+= '/></td>';
+                html += '<td>'+data.response[x].collegeID+'</td>';
+                html += '<td>'+data.response[x].eventTitle+'</td>';
+                html += '<td>'+data.response[x].eventInfo+'</td>';
+                html += '<td><a href="#">Edit</a>&nbsp;&nbsp;<a href="#">Save</a>&nbsp;&nbsp;<a href="#">Delete</a></td></tr>';
+            }
+            $('#events-table').html(html);
+        });
+    });
+
+    // on load of page
+    $(function(){
+
+    });
+
+</script>
+</body>
+</html>

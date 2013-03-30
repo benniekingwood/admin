@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>uLink Administration</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/bootstrap-responsive.min.css" />
+    <link rel="stylesheet" href="css/fullcalendar.css" />
+    <link rel="stylesheet" href="css/unicorn.main.css" />
+    <link rel="stylesheet" href="css/unicorn.grey.css" class="skin-color" />
+</head>
+<body>
+
+
+<div id="header">
+    <h1><a href="/"><img src="img/logo.png" /></a></h1>
+</div>
+
+<div id="search">
+    <input type="text" placeholder="Search here..."/><button type="submit" class="tip-right" title="Search"><i class="icon-search icon-white"></i></button>
+</div>
+<div id="user-nav" class="navbar navbar-inverse">
+    <ul class="nav btn-group">
+        <li class="btn btn-inverse" ><a title="" href="#"><i class="icon icon-user"></i> <span class="text">Profile</span></a></li>
+        <li class="btn btn-inverse"><a title="" href="/"><i class="icon icon-share-alt"></i> <span class="text">Logout</span></a></li>
+    </ul>
+</div>
+
+<div id="sidebar">
+    <a href="#" class="visible-phone"><i class="icon icon-home"></i>Dashboard</a>
+    <ul>
+        <li class="active"><a href="/"><i class="icon icon-home"></i> <span>Dashboard</span></a></li>
+        <li><a href="/events"><i class="icon icon-th"></i> <span>Events</span></a></li>
+    </ul>
+</div>
+
+<div id="content">
+    <div id="content-header">
+        <h1>Dashboard</h1>
+    </div>
+    <div id="breadcrumb">
+        <a href="#" title="Go to Home" class="tip-bottom"><i class="icon-home"></i>Home</a>
+        <a href="#" class="current">Dashboard</a>
+    </div>
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span12 center" style="text-align: center;">
+                <ul class="stat-boxes">
+                    <li class="popover-visits">
+                        <div class="left peity_bar_good"><span>2,4,9,7,12,10,12</span>+10%</div>
+                        <div class="right">
+                            <span id="number-of-users">-</span>
+                            Users
+                        </div>
+                    </li>
+                    <li class="popover-users">
+                        <div class="left peity_bar_neutral"><span>20,15,18,14,10,9,9,9</span>0%</div>
+                        <div class="right">
+                            <span id="number-of-events">-</span>
+                            Events
+                        </div>
+                    </li>
+                    <li class="popover-orders">
+                        <div class="left peity_bar_bad"><span>3,5,9,7,12,20,10</span>-50%</div>
+                        <div class="right">
+                            <span id="number-of-snaps">-</span>
+                            Snapshots
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="widget-box">
+                    <div class="widget-title"><span class="icon"><i class="icon-signal"></i></span><h5>Site Statistics</h5><div class="buttons"><a id="btn-updatestats" href="#" class="btn btn-mini"><i class="icon-refresh"></i> Update stats</a></div></div>
+                    <div class="widget-content">
+                        <div class="row-fluid">
+                            <div class="span4">
+                                <ul class="site-stats">
+                                    <li><i class="icon-user"></i> <strong>1433</strong> <small>Total Users</small></li>
+                                    <li><i class="icon-arrow-right"></i> <strong>16</strong> <small>New Users (last week)</small></li>
+                                    <li class="divider"></li>
+                                    <li><i class="icon-shopping-cart"></i> <strong>259</strong> <small>Total Events</small></li>
+                                    <li><i class="icon-tag"></i> <strong>43</strong> <small>Flags</small></li>
+                                </ul>
+                            </div>
+                            <div class="span8">
+                                <div class="chart"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div id="footer" class="span12">
+                2013 &copy; uLink, Inc. Administration
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="js/excanvas.min.js"></script>
+<script src="js/jquery.min.js"></script>
+<script src="js/jquery.ui.custom.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/jquery.flot.min.js"></script>
+<script src="js/jquery.flot.resize.min.js"></script>
+<script src="js/jquery.peity.min.js"></script>
+<script src="js/fullcalendar.min.js"></script>
+<script src="js/unicorn.js"></script>
+<script src="js/unicorn.dashboard.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var socket = io.connect();
+    // on connection to server, ask for user's name with an anonymous callback
+    socket.on('connect', function(){
+        socket.emit('events:find', function(data) {
+            $('#number-of-events').html("<strong>"+data.response.length+"</strong>");
+        });
+        socket.emit('users:find', function(data) {
+            $('#number-of-users').html("<strong>"+data.response.length+"</strong>");
+        });
+        socket.emit('snaps:find', function(data) {
+            $('#number-of-snaps').html("<strong>"+data.response.length+"</strong>");
+        });
+    });
+
+    // on load of page
+    $(function(){
+        $('#btn-updatestats').click( function() {
+            socket.emit('events:find', function(data) {
+                $('#number-of-events').html("<strong>"+data.response.length+"</strong>");
+            });
+            socket.emit('users:find', function(data) {
+                $('#number-of-users').html("<strong>"+data.response.length+"</strong>");
+            });
+            socket.emit('snaps:find', function(data) {
+                $('#number-of-snaps').html("<strong>"+data.response.length+"</strong>");
+            });
+        });
+
+
+        // when the client clicks refreshData
+        $('#datasend').click( function() {
+            var message = $('#data').val();
+            $('#data').val('');
+            // tell server to execute 'sendchat' and send along one parameter
+            socket.emit('sendchat', message);
+        });
+
+        // when the client hits ENTER on their keyboard
+        $('#data').keypress(function(e) {
+            if(e.which == 13) {
+                $(this).blur();
+                $('#datasend').focus().click();
+            }
+        });
+    });
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+<!--
+BEGIN SOCKET CHAT CODE
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+<script>
+  var socket = io.connect('http://localhost:8080');
+
+  // on connection to server, ask for user's name with an anonymous callback
+  socket.on('connect', function(){
+    // call the server-side function 'adduser' and send one parameter (value of prompt)
+    socket.emit('adduser', prompt("What's your name?"));
+  });
+
+  // listener, whenever the server emits 'updatechat', this updates the chat body
+  socket.on('updatechat', function (username, data) {
+    $('#conversation').append('<b>'+username + ':</b> ' + data + '<br>');
+  });
+
+  // listener, whenever the server emits 'updateusers', this updates the username list
+  socket.on('updateusers', function(data) {
+    $('#users').empty();
+    $.each(data, function(key, value) {
+      $('#users').append('<div>' + key + '</div>');
+    });
+  });
+
+  // on load of page
+  $(function(){
+    // when the client clicks SEND
+    $('#datasend').click( function() {
+      var message = $('#data').val();
+      $('#data').val('');
+      // tell server to execute 'sendchat' and send along one parameter
+      socket.emit('sendchat', message);
+    });
+
+    // when the client hits ENTER on their keyboard
+    $('#data').keypress(function(e) {
+      if(e.which == 13) {
+        $(this).blur();
+        $('#datasend').focus().click();
+      }
+    });
+  });
+
+</script>
+<div style="float:left;width:100px;border-right:1px solid black;height:300px;padding:10px;overflow:scroll-y;">
+  <b>USERS</b>
+  <div id="users"></div>
+</div>
+<div style="float:left;width:300px;height:250px;overflow:scroll-y;padding:10px;">
+  <div id="conversation"></div>
+  <input id="data" style="width:200px;" />
+  <input type="button" id="datasend" value="send" />
+</div>
+END SOCKET CHAT CODE
+
+-->
