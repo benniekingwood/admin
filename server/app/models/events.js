@@ -19,26 +19,26 @@ var db = mysql.createConnection(config.mysql_db_url);
  * @param res
  */
 exports.findAll = function(req, res) {
-    db.query('SELECT * FROM events', function(err, events) {
+    db.query('select * from events', function(err, events) {
         if ( err ) {
             if(!res) {
-                req.io.respond( {'response' : events } , response.SYSTEM_ERROR.code);
+                req.io.respond( {error : "There was an issue with your request." } , response.SYSTEM_ERROR.code);
             } else {
-                res.send({'response' : events }, response.SYSTEM_ERROR.code);
+                res.send({error : "There was an issue with your request." }, response.SYSTEM_ERROR.code);
             }
         }
         else if(!events ) {
             if(!res) {
-                req.io.respond( {'response' : new Array() } , response.SUCCESS.code);
+                req.io.respond( {events : new Array() } , response.SUCCESS.code);
             } else {
-                res.send({'response' : new Array()  }, response.SUCCESS.code);
+                res.send({events : new Array()  }, response.SUCCESS.code);
             }
         }
         else {
             if(!res) {
-                req.io.respond( {'response' : events } , response.SUCCESS.code);
+                req.io.respond( {events : events } , response.SUCCESS.code);
             } else {
-                res.send({'response' : events }, response.SUCCESS.code);
+                res.send({events : events }, response.SUCCESS.code);
             }
         }
     });
@@ -51,26 +51,26 @@ exports.findAll = function(req, res) {
  * @param res
  */
 exports.findById = function(req, res) {
-    db.query('SELECT * FROM events WHERE _id = '+req.params.id, function(err, event) {
+    db.query('select * from events WHERE _id = '+req.params.id, function(err, event) {
         if ( err ) {
             if(!res) {
-                req.io.respond( {'response' : event } , response.SYSTEM_ERROR.code);
+                req.io.respond( {error : "There was an issue with your request." } , response.SYSTEM_ERROR.code);
             } else {
-                res.send({'response' : event }, response.SYSTEM_ERROR.code);
+                res.send({error :  "There was an issue with your request."  }, response.SYSTEM_ERROR.code);
             }
         }
-        else if(!events ) {
+        else if(!event ) {
             if(!res) {
-                req.io.respond( {'response' : new Array() } , response.SUCCESS.code);
+                req.io.respond( {event : new Array() } , response.SUCCESS.code);
             } else {
-                res.send({'response' : new Array()  }, response.SUCCESS.code);
+                res.send({event : new Array()  }, response.SUCCESS.code);
             }
         }
         else {
             if(!res) {
-                req.io.respond( {'response' : event } , response.SUCCESS.code);
+                req.io.respond( {event : event } , response.SUCCESS.code);
             } else {
-                res.send({'response' : event }, response.SUCCESS.code);
+                res.send({event : event }, response.SUCCESS.code);
             }
         }
     });
@@ -86,23 +86,23 @@ exports.createEvent = function(req, res) {
     db.query('INSERT INTO events SET ?', {active: event.active, featured: event.featured}, function(err, result) {
         if ( err ) {
             if(!res) {
-                req.io.respond( {'response' : result } , response.SYSTEM_ERROR.code);
+                req.io.respond( {error : "There was an issue with your request." } , response.SYSTEM_ERROR.code);
             } else {
-                res.send({'response' : result }, response.SYSTEM_ERROR.code);
+                res.send({error : "There was an issue with your request." }, response.SYSTEM_ERROR.code);
             }
         }
         else if(!result ) {
             if(!res) {
-                req.io.respond( {'response' : "There was a problem creating your event.  Please try again later or contact help@theulink.com." } , response.SYSTEM_ERROR.code);
+                req.io.respond( {error : "There was a problem creating your event.  Please try again later or contact help@theulink.com." } , response.SYSTEM_ERROR.code);
             } else {
-                res.send({'response' : "There was a problem creating your event.  Please try again later or contact help@theulink.com." }, response.SYSTEM_ERROR.code);
+                res.send({error: "There was a problem creating your event.  Please try again later or contact help@theulink.com." }, response.SYSTEM_ERROR.code);
             }
         }
         else {
             if(!res) {
-                req.io.respond( {'response' : result } , response.SUCCESS.code);
+                req.io.respond( {event : result } , response.SUCCESS.code);
             } else {
-                res.send({'response' : result }, response.SUCCESS.code);
+                res.send({event : result }, response.SUCCESS.code);
             }
         }
     });
@@ -118,23 +118,23 @@ exports.updateEvent = function(req, res) {
     db.query('UPDATE events SET active = :active, featured = :featured', {active: event.active, featured: event.featured}, function(err, result) {
         if ( err ) {
             if(!res) {
-                req.io.respond( {'response' : result } , response.SYSTEM_ERROR.code);
+                req.io.respond( {error : "There was an issue with your request." } , response.SYSTEM_ERROR.code);
             } else {
-                res.send({'response' : result }, response.SYSTEM_ERROR.code);
+                res.send({error : "There was an issue with your request." }, response.SYSTEM_ERROR.code);
             }
         }
         else if(!result ) {
             if(!res) {
-                req.io.respond( {'response' : "There was a problem updating your event.  Please try again later or contact help@theulink.com." } , response.SYSTEM_ERROR.code);
+                req.io.respond( {error : "There was a problem updating your event.  Please try again later or contact help@theulink.com." } , response.SYSTEM_ERROR.code);
             } else {
-                res.send({'response' : "There was a problem updating your event.  Please try again later or contact help@theulink.com." }, response.SYSTEM_ERROR.code);
+                res.send({error: "There was a problem updating your event.  Please try again later or contact help@theulink.com." }, response.SYSTEM_ERROR.code);
             }
         }
         else {
             if(!res) {
-                req.io.respond( {'response' : result } , response.SUCCESS.code);
+                req.io.respond( {event: result } , response.SUCCESS.code);
             } else {
-                res.send({'response' : result }, response.SUCCESS.code);
+                res.send({event : result }, response.SUCCESS.code);
             }
         }
     });
@@ -153,31 +153,31 @@ exports.deleteEvent = function(req, res) {
         db.query('DELETE FROM events WHERE _id = '+event.id, function(err, deleted) {
             if ( err ) {
                 if(!res) {
-                    req.io.respond( {'response' : result } , response.SYSTEM_ERROR.code);
+                    req.io.respond( {error : "There was an issue with your request." } , response.SYSTEM_ERROR.code);
                 } else {
-                    res.send({'response' : result }, response.SYSTEM_ERROR.code);
+                    res.send({error : "There was an issue with your request." }, response.SYSTEM_ERROR.code);
                 }
             }
             else if(!result ) {
                 if(!res) {
-                    req.io.respond( {'response' : "There was a problem deleting your event.  Please try again later or contact help@theulink.com." } , response.SYSTEM_ERROR.code);
+                    req.io.respond( {error: "There was a problem deleting your event.  Please try again later or contact help@theulink.com." } , response.SYSTEM_ERROR.code);
                 } else {
-                    res.send({'response' : "There was a problem deleting your event.  Please try again later or contact help@theulink.com." }, response.SYSTEM_ERROR.code);
+                    res.send({error: "There was a problem deleting your event.  Please try again later or contact help@theulink.com." }, response.SYSTEM_ERROR.code);
                 }
             }
             else {
                 if(!res) {
-                    req.io.respond( {'response' : "Event deleted." } , response.SUCCESS.code);
+                    req.io.respond( {event : "Event deleted." } , response.SUCCESS.code);
                 } else {
-                    res.send({'response' : "Event deleted." }, response.SUCCESS.code);
+                    res.send({event : "Event deleted." }, response.SUCCESS.code);
                 }
             }
         });
     } else {
         if(!res) {
-            req.io.respond( {'response' : "An id is required to delete an event." } , response.VALIDATION_ERROR.code);
+            req.io.respond( {error : "An id is required to delete an event." } , response.VALIDATION_ERROR.code);
         } else {
-            res.send({'response' : "An id is required to delete an event." }, response.VALIDATION_ERROR.code);
+            res.send({error : "An id is required to delete an event." }, response.VALIDATION_ERROR.code);
         }
     }
 };

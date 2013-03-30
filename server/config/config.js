@@ -2,7 +2,8 @@
  * Copyright (C) 2013 uLink, Inc. All Rights Reserved.
  *
  * Created On: 3/25/13
- * Description: This file will contain all of the environment specific variables
+ * Description: This file will contain all of the environment specific
+ *              configuration variables
  ********************************************************************************/
 module.exports = {
     development: {

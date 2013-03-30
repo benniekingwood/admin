@@ -21,13 +21,25 @@ var db = mysql.createConnection(config.mysql_db_url);
  */
 exports.findAll = function(req, res) {
     db.query('select * from users', function(err, users) {
-        if ( err || !users) res.send("No users returned.");
-        else {
-            response.SUCCESS.response = users;
+        if ( err ) {
             if(!res) {
-                req.io.respond(response.SUCCESS);
+                req.io.respond( {error : "There was an issue with your request." } , response.SYSTEM_ERROR.code);
             } else {
-                res.send(response.SUCCESS);
+                res.send({error : "There was an issue with your request." }, response.SYSTEM_ERROR.code);
+            }
+        }
+        else if(!users ) {
+            if(!res) {
+                req.io.respond( {users : new Array() } , response.SUCCESS.code);
+            } else {
+                res.send({users : new Array()  }, response.SUCCESS.code);
+            }
+        }
+        else {
+            if(!res) {
+                req.io.respond( {users : users } , response.SUCCESS.code);
+            } else {
+                res.send({users : users }, response.SUCCESS.code);
             }
         }
     });
@@ -41,10 +53,26 @@ exports.findAll = function(req, res) {
  */
 exports.findById =  function(req, res) {
     db.query('select * from users where id = '+req.params.id, function(err, user) {
-        if ( err || !user) res.send("No user returned.");
+        if ( err ) {
+            if(!res) {
+                req.io.respond( {error : "There was an issue with your request." } , response.SYSTEM_ERROR.code);
+            } else {
+                res.send({error : "There was an issue with your request." }, response.SYSTEM_ERROR.code);
+            }
+        }
+        else if(!user ) {
+            if(!res) {
+                req.io.respond( {user : new Array() } , response.SUCCESS.code);
+            } else {
+                res.send({user : new Array()  }, response.SUCCESS.code);
+            }
+        }
         else {
-            response.SUCCESS.response = user;
-            res.send(response.SUCCESS);
+            if(!res) {
+                req.io.respond( {user : user } , response.SUCCESS.code);
+            } else {
+                res.send({user : user }, response.SUCCESS.code);
+            }
         }
     });
 };

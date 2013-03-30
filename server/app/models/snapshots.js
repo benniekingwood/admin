@@ -20,19 +20,25 @@ var db = mysql.createConnection(config.mysql_db_url);
  */
 exports.findAll = function(req, res) {
     db.query('select * from snapshots', function(err, snaps) {
-        if ( err || !snaps) {
+        if ( err ) {
             if(!res) {
-                req.io.respond("No snapshots returned.");
+                req.io.respond( {error : "There was an issue with your request." } , response.SYSTEM_ERROR.code);
             } else {
-                res.send("No snapshots returned.");
+                res.send({error : "There was an issue with your request." }, response.SYSTEM_ERROR.code);
+            }
+        }
+        else if(!snaps ) {
+            if(!res) {
+                req.io.respond( {snaps : new Array() } , response.SUCCESS.code);
+            } else {
+                res.send({snaps : new Array()  }, response.SUCCESS.code);
             }
         }
         else {
-            response.SUCCESS.response = snaps;
             if(!res) {
-                req.io.respond(response.SUCCESS);
+                req.io.respond( {snaps : snaps } , response.SUCCESS.code);
             } else {
-                res.send(response.SUCCESS);
+                res.send({snaps : snaps }, response.SUCCESS.code);
             }
         }
     });

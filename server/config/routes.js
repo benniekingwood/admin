@@ -1,18 +1,25 @@
 /*********************************************************************************
- * Copyright (C) 2013 uLink. All Rights Reserved.
+ * Copyright (C) 2013 uLink, Inc. All Rights Reserved.
  *
  * Created On: 3/25/13
- * Description:
+ * Description:  This file will contain all of the routes for the models
  ********************************************************************************/
 module.exports = function (app) {
     // event routes
-    var event = require('../app/models/events');
-    app.get('/api/events', event.findAll);
+    var user = require('../app/models/users'),
+        event = require('../app/models/events'),
+        snap = require('../app/models/snapshots'),
+        suggestion = require('../app/models/suggestions'),
+        flag = require('../app/models/flags');
+
+    // event routes
     app.get('/api/events/:id', event.findById);
+    app.get('/api/events', event.findAll);
     app.post('/api/events', event.createEvent);
     app.put('/api/events/:id', event.updateEvent);
     app.delete('/api/events/:id', event.deleteEvent);
 
+    // socket event routes
     app.io.route('events', {
         find: function(req) {
             event.findAll(req);
@@ -31,14 +38,11 @@ module.exports = function (app) {
         }
     });
 
-    // TODO: add authenticate stuff to certain routes
-    // app.param('userId', users.user) NOT Sure what this does
-
     // users routes
-    var user = require('../app/models/users');
-    app.get('/api/users/', user.findAll);
+    app.get('/api/users', user.findAll);
     app.get('/api/users/:id', user.findById);
 
+    // socket users routes
     app.io.route('users', {
         find: function(req) {
             user.findAll(req);
@@ -52,10 +56,9 @@ module.exports = function (app) {
     });
 
     // snapshots routes
-    var snap = require('../app/models/snapshots');
-    app.get('/api/snaps/', snap.findAll);
-    //app.get('/api/snaps/:id', snap.findById);
+    app.get('/api/snaps', snap.findAll);
 
+    // socket snaps routes
     app.io.route('snaps', {
         find: function(req) {
             snap.findAll(req);
@@ -67,20 +70,26 @@ module.exports = function (app) {
     });
 
     // suggestions routes
-    var suggestion = require('../app/models/suggestions');
-    app.get('/api/suggestions/', suggestion.findAll);
+    app.get('/api/suggestions', suggestion.findAll);
 
+    // socket suggestion routes
     app.io.route('suggestions', {
         find: function(req) {
             suggestion.findAll(req);
-        },
-        remove: function(req) {
         }
     });
 
-    // flags routes
-    var flag = require('../app/models/flags');
-    //app.get('/api/flags/', flag.findAll);
-    //app.get('/api/flags/:id', flag.findById);
-    //app.delete('/api/flags/:id', flag.deleteFlag);
+    // flag routes
+    app.get('/api/flags', flag.findAll);
+
+    // socket flag routes
+    app.io.route('flags', {
+        find: function(req) {
+            flag.findAll(req);
+        }
+    });
+
+    // TODO: add authenticate stuff to certain routes
+    // app.param('userId', users.user) NOT Sure what this does
+    //app.all('/api/*', requireAuthentication);
 }

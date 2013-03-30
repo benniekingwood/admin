@@ -20,19 +20,25 @@ var db = mysql.createConnection(config.mysql_db_url);
  */
 exports.findAll = function(req, res) {
     db.query('select * from suggestions', function(err, suggestions) {
-        if ( err || !suggestions) {
+        if ( err ) {
             if(!res) {
-                req.io.respond("No suggestions returned.");
+                req.io.respond( {error : "There was an issue with your request." } , response.SYSTEM_ERROR.code);
             } else {
-                res.send("No suggestions returned.");
+                res.send({error : "There was an issue with your request." }, response.SYSTEM_ERROR.code);
+            }
+        }
+        else if(!suggestions ) {
+            if(!res) {
+                req.io.respond( {suggestions : new Array() } , response.SUCCESS.code);
+            } else {
+                res.send({suggestions : new Array()  }, response.SUCCESS.code);
             }
         }
         else {
-            response.SUCCESS.response = suggestions;
             if(!res) {
-                req.io.respond(response.SUCCESS);
+                req.io.respond( {suggestions : suggestions } , response.SUCCESS.code);
             } else {
-                res.send(response.SUCCESS);
+                res.send({suggestions : suggestions }, response.SUCCESS.code);
             }
         }
     });
