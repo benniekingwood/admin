@@ -2,6 +2,7 @@
 html, body {
     margin-top: 60px;
 }
+a.active { color: #fff;}
 .headline-number-users { font-size: 84px; color: #006633;font-weight: bolder;}
 .headline-number-events { font-size: 84px; color: #3333cc;font-weight: bolder;}
 .headline-number-snapshots { font-size: 84px; color: #cc3300; font-weight: bolder;}

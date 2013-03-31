@@ -11,6 +11,9 @@ var env = process.env.NODE_ENV || 'development',
 
 // make the connection to the mysql db
 var db = mysql.createConnection(config.mysql_db_url);
+var baseSelectSQL = 'select _id id, active, featured, collegeID school_id, collegeName school_name, ' +
+    'eventTitle title, eventDate date, eventInfo info, eventTime time, ' +
+    'eventLocation location, imageURL image_url, userID user_id, userName user_name from events';
 
 /**
  * This is function will find all the events based on the
@@ -19,7 +22,7 @@ var db = mysql.createConnection(config.mysql_db_url);
  * @param res
  */
 exports.findAll = function(req, res) {
-    db.query('select * from events', function(err, events) {
+    db.query(baseSelectSQL, function(err, events) {
         if ( err ) {
             if(!res) {
                 req.io.respond( {error : "There was an issue with your request." } , response.SYSTEM_ERROR.code);
@@ -51,7 +54,7 @@ exports.findAll = function(req, res) {
  * @param res
  */
 exports.findById = function(req, res) {
-    db.query('select * from events WHERE _id = '+req.params.id, function(err, event) {
+    db.query(baseSelectSQL + ' WHERE _id = '+req.params.id, function(err, event) {
         if ( err ) {
             if(!res) {
                 req.io.respond( {error : "There was an issue with your request." } , response.SYSTEM_ERROR.code);

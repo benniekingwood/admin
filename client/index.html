@@ -10,69 +10,115 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-
-<div class="navbar navbar-inverse navbar-fixed-top">
-    <div class="navbar-inner">
-        <div class="container">
-            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="brand" href="#">uLink Administration</a>
-            <div class="nav-collapse collapse">
-                <ul class="nav">
-                    <li class="active"><a href="#">Dashboard</a></li>
-                    <li><a href="#about">Users</a></li>
-                    <li><a href="./events.html">Events</a></li>
-                </ul>
-                <a class="pull-right btn btn-inverse" href="./signin.html"><i class="icon-off icon-white"></i> Log Out</a>
-            </div><!--/.nav-collapse -->
+<!-- Nav header -->
+<script type="text/x-handlebars">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="brand" href="#">uLink Administration</a>
+                <div class="nav-collapse collapse">
+                    <ul class="nav">
+                        <li>{{#linkTo 'dashboard'}}Dashboard{{/linkTo}}</li>
+                        <li>{{#linkTo 'users'}}Users{{/linkTo}}</li>
+                        <li>{{#linkTo 'events'}}Events{{/linkTo}}</li>
+                    </ul>
+                    <a class="pull-right btn btn-inverse" href="./signin.html"><i class="icon-off icon-white"></i> Log Out</a>
+                </div><!--/.nav-collapse -->
+            </div>
         </div>
     </div>
-</div>
+    {{outlet}}
+</script> <!-- /nav header -->
 
-<div class="container">
-
-    <script type="text/x-handlebars" data-template-name="index">
-        <h2>Welcome to Ember.js</h2>
-        <ul>
-            {{#each item in content}}
-            <li>{{item}}</li>
-            {{/each}}
-        </ul>
-    </script>
-
-    <!-- Example row of columns -->
-    <div class="row">
-        <div class="span6 headline">
-            <span class="headline-number-users">54</span> <a href="#about">Users</a>
+<script type="text/x-handlebars" data-template-name="dashboard">
+    <div class="container">
+        {{#each item in model}}
+        <div class="row">
+            <div class="span6 headline">
+                <span class="headline-number-users">{{#if item.num_of_users}}{{item.num_of_users}}{{else}}0{{/if}}</span> <a href="#about">Users</a>
+            </div>
+            <div class="span6 headline">
+                <span class="headline-number-events">{{#if item.num_of_events}}{{item.num_of_events}}{{else}}0{{/if}}</span> <a href="#about">Events</a>
+            </div>
         </div>
-        <div class="span6 headline">
-            <span class="headline-number-events">5343</span> <a href="#about">Events</a>
+
+        <div class="row">
+            <div class="span6 headline">
+                <span class="headline-number-snapshots">{{#if item.num_of_snaps}}{{item.num_of_snaps}}{{else}}0{{/if}}</span> <a href="#about">Snapshots</a>
+            </div>
+            <div class="span6 headline">
+                <span class="headline-number-flags">{{#if item.num_of_flags}}{{item.num_of_flags}}{{else}}0{{/if}}</span> <a href="#about">Flags</a>
+            </div>
         </div>
-    </div>
+        {{/each}}
+        <hr>
+        <footer>
+            <p>&copy; uLink, Inc. 2013.  All Rights Reserved.</p>
+        </footer>
+    </div> <!-- /container -->
+</script> <!-- /dashboard template -->
 
-    <div class="row">
-        <div class="span6 headline">
-            <span class="headline-number-snapshots">65</span> <a href="#about">Snapshots</a>
-        </div>
-        <div class="span6 headline">
-            <span class="headline-number-flags">234</span> <a href="#about">Flags</a>
-        </div>
-    </div>
+<script type="text/x-handlebars" data-template-name="users">
+    <div class="container">
+        Users page
+        <hr>
+        <footer>
+            <p>&copy; uLink, Inc. 2013.  All Rights Reserved.</p>
+        </footer>
+    </div> <!-- /container -->
+</script> <!-- /users template -->
 
-    <hr>
-
-    <footer>
-        <p>&copy; uLink, Inc. 2013.  All Rights Reserved.</p>
-    </footer>
-
-</div> <!-- /container -->
-  <script src="js/libs/jquery-1.9.1.js"></script>
- <script src="js/libs/bootstrap.min.js"></script>
-  <script src="js/libs/handlebars-1.0.0-rc.3.js"></script>
-  <script src="js/libs/ember-1.0.0-rc.1.js"></script>
-  <script src="js/app.js"></script>
+<script type="text/x-handlebars" data-template-name="events">
+    <div class="container">
+       <table class="table table-bordered table-striped table-hover">
+            <thead id="events-table">
+                <tr><th>Active</th><th>Featured</th><th>School</th><th>Title</th><th>Description</th><th>Actions</th></tr>
+               {{#each model}}
+               <tr class="gradeX">
+                   {{#if active}}
+                        <td><input type="checkbox" checked/></td>
+                   {{else}}
+                        <td><input type="checkbox"/></td>
+                   {{/if}}
+                   {{#if featured}}
+                        <td><input type="checkbox" checked/></td>
+                   {{else}}
+                        <td><input  type="checkbox"/></td>
+                   {{/if}}
+                    <td>{{school_id}}</td>
+                    <td>{{title}}</td>
+                    <td>{{info}}</td>
+                    <td>
+                        <div class="btn-group">
+                            <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Action<span class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">Save</a></li>
+                                <li><a href="#">Edit</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#">Delete</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                {{/each}}
+            </thead>
+        </table>
+        <hr>
+        <footer>
+            <p>&copy; uLink, Inc. 2013.  All Rights Reserved.</p>
+        </footer>
+    </div> <!-- /container -->
+</script> <!-- /events template -->
+<script src="js/libs/jquery-1.9.1.js"></script>
+<script src="js/libs/bootstrap.min.js"></script>
+<script src="js/libs/handlebars-1.0.0-rc.3.js"></script>
+<script src="js/libs/ember.js"></script>
+<script src="js/libs/ember-data.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>

@@ -5,12 +5,22 @@
  * Description:  This file will contain all of the routes for the models
  ********************************************************************************/
 module.exports = function (app) {
-    // event routes
     var user = require('../app/models/users'),
         event = require('../app/models/events'),
         snap = require('../app/models/snapshots'),
         suggestion = require('../app/models/suggestions'),
-        flag = require('../app/models/flags');
+        flag = require('../app/models/flags',
+        dashboard = require('../app/models/dashboard'));
+
+    // dashboard routes
+    app.get('/api/dashboards', dashboard.findAll);
+
+    // socket dashboard routes
+    app.io.route('dashboards', {
+        find: function(req) {
+            dashboard.findAll(req);
+        }
+    });
 
     // event routes
     app.get('/api/events/:id', event.findById);
