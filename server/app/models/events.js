@@ -117,8 +117,11 @@ exports.createEvent = function(req, res) {
  * @param res
  */
 exports.updateEvent = function(req, res) {
-    var event = req.body;
-    db.query('UPDATE events SET active = :active, featured = :featured', {active: event.active, featured: event.featured}, function(err, result) {
+    var event = req.body.event;
+    var updateSQL= "update events SET active = " + event.active +", featured = "+event.featured+", eventTitle = "+ db.escape(event.title) +
+        ", eventInfo = " +db.escape(event.info)+", eventLocation = "+db.escape(event.location)+", eventDate = " +
+        db.escape(event.date) +", eventTime = " +db.escape(event.time)+" where _id = "+req.params.id;
+    db.query(updateSQL, function(err, result) {
         if ( err ) {
             if(!res) {
                 req.io.respond( {error : "There was an issue with your request." } , response.SYSTEM_ERROR.code);
@@ -135,9 +138,9 @@ exports.updateEvent = function(req, res) {
         }
         else {
             if(!res) {
-                req.io.respond( {event: result } , response.SUCCESS.code);
+                req.io.respond({},response.SUCCESS.code);
             } else {
-                res.send({event : result }, response.SUCCESS.code);
+                res.send({},response.SUCCESS.code);
             }
         }
     });
@@ -153,7 +156,7 @@ exports.deleteEvent = function(req, res) {
     var event = req.params;
     if(event.id > 0)
     {
-        db.query('DELETE FROM events WHERE _id = '+event.id, function(err, deleted) {
+        db.query('DELETE FROM events WHERE _id = '+event.id, function(err, result) {
             if ( err ) {
                 if(!res) {
                     req.io.respond( {error : "There was an issue with your request." } , response.SYSTEM_ERROR.code);
@@ -170,9 +173,9 @@ exports.deleteEvent = function(req, res) {
             }
             else {
                 if(!res) {
-                    req.io.respond( {event : "Event deleted." } , response.SUCCESS.code);
+                    req.io.respond( { } , response.SUCCESS.code);
                 } else {
-                    res.send({event : "Event deleted." }, response.SUCCESS.code);
+                    res.send({ }, response.SUCCESS.code);
                 }
             }
         });

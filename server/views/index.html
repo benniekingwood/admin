@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8 />
+<title>uLink Administration</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/bootstrap-responsive.min.css" />
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<!-- Logged Out View -->
+<script type="text/x-handlebars" data-template-name="auth">
+    <div class="container">
+        <form class="form-signin">
+            <h2 class="form-signin-heading">Please sign in</h2>
+            {{#if App.AuthController.hasValidationErrors}}
+                <span class="alert-error">Houston, we have a problem.</span><br />
+            {{/if}}
+            {{view Ember.TextField target="App.AuthController" action="authenticate" classNames="input-block-level" valueBinding="email" placeholder="Email address"}}
+            {{view Ember.TextField action="authenticate" classNames="input-block-level" valueBinding="password" type="password" placeholder="Password"}}
+            <label class="checkbox">
+                <input type="checkbox" value="remember-me"> Remember me
+            </label>
+            <button class="btn btn-large btn-primary" {{action "authenticate"}}>Sign in</button>
+        </form>
+    </div> <!-- /container -->
+</script>
+
+
+<!-- Nav header -->
+<script type="text/x-handlebars" data-template-name="_navbar">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+            <div class="container">
+             <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="brand" {{#linkTo 'dashboard'}}{{unbound App.title}}{{/linkTo}}</a>
+        <div class="nav-collapse collapse">
+           <!-- <ul class="nav">
+                <li></li>
+                <li></li>
+                <li>{{#linkTo 'users'}}Users{{/linkTo}}</li>
+            </ul>-->
+            <ul class="nav pull-right">
+                <li id="fat-menu" class="dropdown">
+                    <a href="#" id="drop3" role="button" class="dropdown-toggle" data-toggle="dropdown">Modules <b class="caret"></b></a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="drop3">
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">{{#linkTo 'dashboard'}}Dashboard{{/linkTo}}</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">{{#linkTo 'users'}}Users{{/linkTo}}</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">{{#linkTo 'events'}}Events{{/linkTo}}</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">{{#linkTo 'suggestions'}}Suggestions{{/linkTo}}</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">{{#linkTo 'flags'}}Flags{{/linkTo}}</a></li>
+                        <li role="presentation" class="divider"></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" {{action "deauthenticate" target="controllers.auth"}}><i class="icon-off"></i> Log Out</a></li>
+                    </ul>
+                </li>
+            </ul>
+          <!--  <a class="pull-right btn btn-inverse" {{action "deauthenticate" target="controllers.auth"}}><i class="icon-off icon-white"></i> Log Out</a>-->
+            </div><!--/.nav-collapse -->
+            </div>
+            </div>
+    </div>
+</script>
+
+
+<script type="text/x-handlebars" data-template-name="dashboard">
+    {{partial navbar}}
+    <div class="container">
+        {{#each item in model}}
+        <div class="row">
+            <div class="span6 headline">
+                <span class="headline-number-users">{{#if item.num_of_users}}{{item.num_of_users}}{{else}}0{{/if}}</span> <a href="#about">Users</a>
+            </div>
+            <div class="span6 headline">
+                <span class="headline-number-events">{{#if item.num_of_events}}{{item.num_of_events}}{{else}}0{{/if}}</span> <a href="#about">Events</a>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="span6 headline">
+                <span class="headline-number-snapshots">{{#if item.num_of_snaps}}{{item.num_of_snaps}}{{else}}0{{/if}}</span> <a href="#about">Snapshots</a>
+            </div>
+            <div class="span6 headline">
+                <span class="headline-number-flags">{{#if item.num_of_flags}}{{item.num_of_flags}}{{else}}0{{/if}}</span> <a href="#about">Flags</a>
+            </div>
+        </div>
+        {{/each}}
+        <hr>
+        <footer>
+            <p>&copy; uLink, Inc. 2013.  All Rights Reserved.</p>
+        </footer>
+    </div> <!-- /container -->
+</script> <!-- /dashboard template -->
+
+<script type="text/x-handlebars" data-template-name="users">
+    {{partial navbar}}
+    <div class="container">
+        Users page
+        <hr>
+        <footer>
+            <p>&copy; uLink, Inc. 2013.  All Rights Reserved.</p>
+        </footer>
+    </div> <!-- /container -->
+</script> <!-- /users template -->
+<script type="text/x-handlebars" data-template-name="suggestions">
+    {{partial navbar}}
+    <div class="container">
+        Suggestions page
+        <hr>
+        <footer>
+            <p>&copy; uLink, Inc. 2013.  All Rights Reserved.</p>
+        </footer>
+    </div> <!-- /container -->
+</script> <!-- /users template -->
+<script type="text/x-handlebars" data-template-name="flags">
+    {{partial navbar}}
+    <div class="container">
+        Flags page
+        <hr>
+        <footer>
+            <p>&copy; uLink, Inc. 2013.  All Rights Reserved.</p>
+        </footer>
+    </div> <!-- /container -->
+</script> <!-- /users template -->
+
+<script type="text/x-handlebars" data-template-name="events">
+    {{partial navbar}}
+    <div class="container">
+       {{#if isEditing}}
+        {{partial 'events/edit'}}
+       {{else}}
+        <table class="table table-bordered table-striped table-hover">
+            <thead id="events-table">
+                <tr><th>Active</th><th>Featured</th><th>School</th><th>Title</th><th>Description</th><th>Actions</th><th>State</th></tr>
+               {{#each model}}
+               <tr class="gradeX">
+                   <td>{{view Ember.Checkbox checkedBinding="active"}}</td>
+                   <td>{{view Ember.Checkbox checkedBinding="featured"}}</td>
+                   <td>{{school_id}}</td>
+                   <td>{{title}}</td>
+                   <td>{{info}}</td>
+                    <td>
+                        <div class="btn-group">
+                            <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Action<span class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                {{#if isDirty}}
+                                <li><a {{action 'save'}}>Save All Changes</a></li>
+                                {{/if}}
+                                <li><a {{action 'edit'}}>Edit</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#">Delete</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                        {{#if isError}}
+                            <td><span class="label label-important">Error</span></td>
+                        {{else}}
+                            {{#if isDirty}}
+                            <td><span class="label label-warning">Changed</span></td>
+                            {{else}}
+                            <td><span class="label label-success"><i class="icon-ok icon-white"></i></span></td>
+                        {{/if}}
+                       {{/if}}
+                </tr>
+                {{/each}}
+            </thead>
+        </table>
+        {{/if}}
+        <hr>
+        <footer>
+            <p>&copy; uLink, Inc. 2013.  All Rights Reserved.</p>
+        </footer>
+    </div> <!-- /container -->
+</script> <!-- /events template -->
+
+<script type="text/x-handlebars" data-template-name="events/_edit">
+    {{partial navbar}}
+    <div class="container form-horizontal">
+        <h1>Edit Event</h1>
+        <div class="control-group">
+            <label class="control-label" for="">Active</label>
+            <div class="controls">
+                {{view Ember.Checkbox checkedBinding="active"}}
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="">Featured</label>
+            <div class="controls">
+                {{view Ember.Checkbox checkedBinding="featured"}}
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="">Title</label>
+            <div class="controls">
+                {{view Ember.TextField valueBinding='title'}}
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="">Description</label>
+            <div class="controls">
+                {{view Ember.TextArea valueBinding='info'}}
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="">Location</label>
+            <div class="controls">
+                {{view Ember.TextField valueBinding='location'}}
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="">Time</label>
+            <div class="controls">
+                {{view Ember.TextField valueBinding='time'}}
+            </div>
+        </div>
+        <div class="row">
+            <button class="btn" {{action 'doneEditing'}}>Cancel</button>
+            <button class="btn btn-primary" {{action 'doneEditing'}}>Save</button>
+        </div>
+        </div>
+</script>
+<script src="js/libs/jquery-1.9.1.js"></script>
+<script src="js/libs/bootstrap.min.js"></script>
+<script src="js/libs/handlebars-1.0.0-rc.3.js"></script>
+<script src="js/libs/ember.js"></script>
+<script src="js/libs/ember-data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

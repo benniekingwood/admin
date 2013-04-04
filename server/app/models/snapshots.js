@@ -19,7 +19,7 @@ var db = mysql.createConnection(config.mysql_db_url);
  * @param res
  */
 exports.findAll = function(req, res) {
-    db.query('select * from snapshots', function(err, snaps) {
+    db.query('select _id id, category, caption, userId user_id, schoolId school_id, imageURL image_url, created from snapshots', function(err, snaps) {
         if ( err ) {
             if(!res) {
                 req.io.respond( {error : "There was an issue with your request." } , response.SYSTEM_ERROR.code);
@@ -29,9 +29,9 @@ exports.findAll = function(req, res) {
         }
         else if(!snaps ) {
             if(!res) {
-                req.io.respond( {snaps : new Array() } , response.SUCCESS.code);
+                req.io.respond( {snaps : {} } , response.SUCCESS.code);
             } else {
-                res.send({snaps : new Array()  }, response.SUCCESS.code);
+                res.send({snaps : {}  }, response.SUCCESS.code);
             }
         }
         else {
