@@ -12,9 +12,9 @@ var env = process.env.NODE_ENV || 'development',
 
 // make the connection to the mysql db
 var db = mysql.createConnection(config.mysql_db_url);
-var baseSelectSQL = 'select u.id, firstname first_name, lastname last_name, username, email, school_id, major' +
-                    'year, school_status, bio, image_url, autopass, deactive, activation_key,'+
-                    'created, twitter_username, twitter_enabled, s.name school_name inner join schools s on s.id = u.school_id';
+var baseSelectSQL = 'select u.id, u.firstname first_name, u.lastname last_name, u.username, u.email, u.school_id, u.major, ' +
+                    'u.year, u.school_status, u.bio, u.image_url, u.activation active, u.autopass, u.deactive, u.activation_key, '+
+                    'u.created, u.twitter_username, u.twitter_enabled, s.name school_name from users u inner join schools s on s.id = u.school_id ';
 
 /**
  * This is function will find all the users based on the
@@ -23,8 +23,9 @@ var baseSelectSQL = 'select u.id, firstname first_name, lastname last_name, user
  * @param res
  */
 exports.findAll = function(req, res) {
-    db.query('select firstname, last from users', function(err, users) {
+    db.query(baseSelectSQL, function(err, users) {
         if ( err ) {
+            console.log('{users#findAll} - Error: ' + err);
             if(!res) {
                 req.io.respond( {error : "There was an issue with your request." } , response.SYSTEM_ERROR.code);
             } else {
@@ -55,8 +56,9 @@ exports.findAll = function(req, res) {
  * @param res
  */
 exports.findById =  function(req, res) {
-    db.query('select * from users where id = '+req.params.id, function(err, user) {
+    db.query(baseSelectSQL + ' where id = '+req.params.id, function(err, user) {
         if ( err ) {
+            console.log('{users#findById} - Error: ' + err);
             if(!res) {
                 req.io.respond( {error : "There was an issue with your request." } , response.SYSTEM_ERROR.code);
             } else {
@@ -118,6 +120,7 @@ exports.deleteUser = function(req, res) {
     {
         db.query('DELETE FROM users WHERE id = '+user.id, function(err, result) {
             if ( err ) {
+                console.log('{users#deleteUser} - Error: ' + err);
                 if(!res) {
                     req.io.respond( {error : "There was an issue with your request." } , response.SYSTEM_ERROR.code);
                 } else {

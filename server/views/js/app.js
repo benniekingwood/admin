@@ -2,7 +2,8 @@ App = Em.Application.create({
     title: 'uLink Administration',
     year: new Date().getFullYear()
 });
-App.REST_SERVER_URL ='http://localhost:8889';
+App.REST_SERVER_URL ='http://admin.theulink.com:8889';
+//App.REST_SERVER_URL ='http://localhost:8889';
 App.Store = DS.Store.extend({
     revision: 12,
     adapter: DS.RESTAdapter.create({
@@ -156,8 +157,9 @@ App.AuthRoute = Ember.Route.extend({
 App.Dashboard = DS.Model.extend({
     num_of_users: DS.attr('number'),
     num_of_events: DS.attr('number'),
-    num_of_snaps: DS.attr('number'),
-    num_of_flags: DS.attr('number')
+    num_of_snapshots: DS.attr('number'),
+    num_of_flags: DS.attr('number'),
+    num_of_suggestions: DS.attr('number')
 });
 App.DashboardController = Ember.ObjectController.extend({
     needs: ['auth']
@@ -181,18 +183,21 @@ App.DashboardRoute = Ember.Route.extend({
 // Events
 ////////////////
 App.Event = DS.Model.extend({
-    active: DS.attr('boolean'),
-    featured: DS.attr('boolean'),
     user_id: DS.attr('number'),
     school_id: DS.attr('number'),
+    active: DS.attr('boolean'),
+    featured: DS.attr('boolean'),
+    user_name: DS.attr('string'),
     school_name: DS.attr('string'),
     title: DS.attr('string'),
     info: DS.attr('string'),
     location: DS.attr('string'),
     time: DS.attr('string'),
     date: DS.attr('string'),
+    image_url: DS.attr('string'),
     created: DS.attr('string')
 });
+
 App.EventsController = Ember.ObjectController.extend({
     needs: ['auth'],
     isEditing: false,
@@ -234,6 +239,7 @@ App.User = DS.Model.extend({
     major: DS.attr('string'),
     autopass: DS.attr('boolean'),
     deactive: DS.attr('boolean'),
+    active: DS.attr('boolean'),
     activation_key: DS.attr('string'),
     twitter_username: DS.attr('string'),
     twitter_enabled: DS.attr('boolean'),
@@ -279,7 +285,7 @@ App.Flag = DS.Model.extend({
     reporter_user_id: DS.attr('number'),
     snap_id: DS.attr('number'),
     event_id: DS.attr('number'),
-    post_id: DS.attr('number'),
+    listing_id: DS.attr('number'),
     inappropriate: DS.attr('boolean'),
     miscategorized: DS.attr('boolean'),
     spam: DS.attr('boolean'),

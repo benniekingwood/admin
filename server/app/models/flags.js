@@ -29,9 +29,9 @@ exports.findAll = function(req, res) {
         }
         else if(!flags ) {
             if(!res) {
-                req.io.respond( {flags : new Array() } , response.SUCCESS.code);
+                req.io.respond( {flags :{} } , response.SUCCESS.code);
             } else {
-                res.send({flags : new Array()  }, response.SUCCESS.code);
+                res.send({flags : {}  }, response.SUCCESS.code);
             }
         }
         else {

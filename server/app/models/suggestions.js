@@ -29,9 +29,9 @@ exports.findAll = function(req, res) {
         }
         else if(!suggestions ) {
             if(!res) {
-                req.io.respond( {suggestions : new Array() } , response.SUCCESS.code);
+                req.io.respond( {suggestions : {} } , response.SUCCESS.code);
             } else {
-                res.send({suggestions : new Array()  }, response.SUCCESS.code);
+                res.send({suggestions : {}  }, response.SUCCESS.code);
             }
         }
         else {

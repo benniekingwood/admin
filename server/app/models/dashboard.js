@@ -26,9 +26,10 @@ exports.findAll = function(req, res) {
         '(SELECT COUNT(*) FROM events) as num_of_events,' +
         '(SELECT COUNT(*) FROM snapshots) as num_of_snapshots,' +
         '(SELECT COUNT(*) FROM flags) as num_of_flags,' +
-        '(SELECT COUNT(*) FROM flags) as num_of_suggestions';
+        '(SELECT COUNT(*) FROM suggestions) as num_of_suggestions';
     db.query(sql, function(err, dashboard) {
         if ( err ) {
+            console.log('{dashboard#findAll} - Error: ' + err);
             if(!res) {
                 req.io.respond( {error : "There was an issue with your request." } , response.SYSTEM_ERROR.code);
             } else {
@@ -37,9 +38,9 @@ exports.findAll = function(req, res) {
         }
         else if(!dashboard ) {
             if(!res) {
-                req.io.respond( {dashboards : new Array() } , response.SUCCESS.code);
+                req.io.respond( {dashboards : {} } , response.SUCCESS.code);
             } else {
-                res.send({dashboards : new Array()  }, response.SUCCESS.code);
+                res.send({dashboards : {}  }, response.SUCCESS.code);
             }
         }
         else {

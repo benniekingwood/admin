@@ -21,6 +21,7 @@ var db = mysql.createConnection(config.mysql_db_url);
 exports.findAll = function(req, res) {
     db.query('select _id id, category, caption, userId user_id, schoolId school_id, imageURL image_url, created from snapshots', function(err, snaps) {
         if ( err ) {
+            console.log('{snapshots#findAll} - Error: ' + err);
             if(!res) {
                 req.io.respond( {error : "There was an issue with your request." } , response.SYSTEM_ERROR.code);
             } else {

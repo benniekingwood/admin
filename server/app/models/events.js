@@ -32,9 +32,9 @@ exports.findAll = function(req, res) {
         }
         else if(!events ) {
             if(!res) {
-                req.io.respond( {events : new Array() } , response.SUCCESS.code);
+                req.io.respond( {events : {}} , response.SUCCESS.code);
             } else {
-                res.send({events : new Array()  }, response.SUCCESS.code);
+                res.send({events : {}  }, response.SUCCESS.code);
             }
         }
         else {
@@ -64,9 +64,9 @@ exports.findById = function(req, res) {
         }
         else if(!event ) {
             if(!res) {
-                req.io.respond( {event : new Array() } , response.SUCCESS.code);
+                req.io.respond( {event : {} } , response.SUCCESS.code);
             } else {
-                res.send({event : new Array()  }, response.SUCCESS.code);
+                res.send({event : {}  }, response.SUCCESS.code);
             }
         }
         else {

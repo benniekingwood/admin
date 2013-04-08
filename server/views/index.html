@@ -39,28 +39,22 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="brand" {{#linkTo 'dashboard'}}{{unbound App.title}}{{/linkTo}}</a>
+        <a class="brand" {{#linkTo 'dashboard'}}{{unbound App.title}}{{/linkTo}}</a>
         <div class="nav-collapse collapse">
-           <!-- <ul class="nav">
-                <li></li>
-                <li></li>
-                <li>{{#linkTo 'users'}}Users{{/linkTo}}</li>
-            </ul>-->
             <ul class="nav pull-right">
                 <li id="fat-menu" class="dropdown">
                     <a href="#" id="drop3" role="button" class="dropdown-toggle" data-toggle="dropdown">Modules <b class="caret"></b></a>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="drop3">
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">{{#linkTo 'dashboard'}}Dashboard{{/linkTo}}</a></li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">{{#linkTo 'users'}}Users{{/linkTo}}</a></li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">{{#linkTo 'events'}}Events{{/linkTo}}</a></li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">{{#linkTo 'suggestions'}}Suggestions{{/linkTo}}</a></li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">{{#linkTo 'flags'}}Flags{{/linkTo}}</a></li>
+                        <li role="presentation">{{#linkTo 'dashboard'}}Dashboard{{/linkTo}}</li>
+                        <li role="presentation">{{#linkTo 'users'}}Users{{/linkTo}}</li>
+                        <li role="presentation">{{#linkTo 'events'}}Events{{/linkTo}}</li>
+                        <li role="presentation">{{#linkTo 'suggestions'}}Suggestions{{/linkTo}}</li>
+                        <li role="presentation">{{#linkTo 'flags'}}Flags{{/linkTo}}</li>
                         <li role="presentation" class="divider"></li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1" {{action "deauthenticate" target="controllers.auth"}}><i class="icon-off"></i> Log Out</a></li>
+                        <li role="presentation"><a {{action "deauthenticate" target="controllers.auth"}}><i class="icon-off"></i> Log Out</a></li>
                     </ul>
                 </li>
             </ul>
-          <!--  <a class="pull-right btn btn-inverse" {{action "deauthenticate" target="controllers.auth"}}><i class="icon-off icon-white"></i> Log Out</a>-->
             </div><!--/.nav-collapse -->
             </div>
             </div>
@@ -83,7 +77,7 @@
 
         <div class="row">
             <div class="span6 headline">
-                <span class="headline-number-snapshots">{{#if item.num_of_snaps}}{{item.num_of_snaps}}{{else}}0{{/if}}</span> <a href="#about">Snapshots</a>
+                <span class="headline-number-snapshots">{{#if item.num_of_snapshots}}{{item.num_of_snapshots}}{{else}}0{{/if}}</span> <a href="#about">Snapshots</a>
             </div>
             <div class="span6 headline">
                 <span class="headline-number-flags">{{#if item.num_of_flags}}{{item.num_of_flags}}{{else}}0{{/if}}</span> <a href="#about">Flags</a>
@@ -92,41 +86,182 @@
         {{/each}}
         <hr>
         <footer>
-            <p>&copy; uLink, Inc. 2013.  All Rights Reserved.</p>
+            <p>&copy; uLink, Inc. {{App.year}}.  All Rights Reserved.</p>
         </footer>
     </div> <!-- /container -->
 </script> <!-- /dashboard template -->
 
+
+
 <script type="text/x-handlebars" data-template-name="users">
     {{partial navbar}}
     <div class="container">
-        Users page
+        <h1>User Management <span class="label label-info">(No actions work yet.)</span></h1>
+        <table class="table table-bordered table-hover">
+            <thead>
+            <tr>
+                <th>Active</th>
+                <th>AutoPass</th>
+                <th>Deactive</th>
+                <th>Username</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>School</th>
+                <th>Actions</th>
+                <th>State</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each model}}
+            <tr>
+                <td>{{view Ember.Checkbox checkedBinding="active"}}</td>
+                <td>{{view Ember.Checkbox checkedBinding="autopass"}}</td>
+                <td>{{view Ember.Checkbox checkedBinding="deactive"}}</td>
+                <td>{{username}}</td>
+                <td>{{name}}</td>
+                <td>{{email}}</td>
+                <td>{{school_name}}</td>
+                <td>
+                    <div class="btn-group">
+                        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Action<span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            {{#if isDirty}}
+                            <li><a {{action 'save'}}>Save All Changes</a></li>
+                            {{/if}}
+                            <li><a {{action 'edit'}}>Edit</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#">Delete</a></li>
+                        </ul>
+                    </div>
+                </td>
+                {{#if isError}}
+                <td><span class="label label-important">Error</span></td>
+                {{else}}
+                {{#if isDirty}}
+                <td><span class="label label-warning">Changed</span></td>
+                {{else}}
+                <td><span class="label label-success"><i class="icon-ok icon-white"></i></span></td>
+                {{/if}}
+                {{/if}}
+            </tr>
+            {{/each}}
+            </tbody>
+        </table>
         <hr>
         <footer>
-            <p>&copy; uLink, Inc. 2013.  All Rights Reserved.</p>
+            <p>&copy; uLink, Inc. {{App.year}}.  All Rights Reserved.</p>
         </footer>
     </div> <!-- /container -->
 </script> <!-- /users template -->
+
+
+
 <script type="text/x-handlebars" data-template-name="suggestions">
     {{partial navbar}}
     <div class="container">
-        Suggestions page
+        <h1>Suggestion Management <span class="label label-info">(No actions work yet.)</span></h1>
+        <table class="table table-bordered table-hover">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Date</th>
+                <th>Actions</th>
+                <th>State</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each model}}
+            <tr>
+                <td>{{name}}</td>
+                <td>{{created}}</td>
+                <td>
+                    <div class="btn-group">
+                        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Action<span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Delete</a></li>
+                        </ul>
+                    </div>
+                </td>
+                {{#if isError}}
+                <td><span class="label label-important">Error</span></td>
+                {{else}}
+                {{#if isDirty}}
+                <td><span class="label label-warning">Changed</span></td>
+                {{else}}
+                <td><span class="label label-success"><i class="icon-ok icon-white"></i></span></td>
+                {{/if}}
+                {{/if}}
+            </tr>
+            {{/each}}
+            </tbody>
+        </table>
         <hr>
         <footer>
-            <p>&copy; uLink, Inc. 2013.  All Rights Reserved.</p>
+            <p>&copy; uLink, Inc. {{App.year}}.  All Rights Reserved.</p>
         </footer>
     </div> <!-- /container -->
-</script> <!-- /users template -->
+</script> <!-- /suggestions template -->
+
+
 <script type="text/x-handlebars" data-template-name="flags">
     {{partial navbar}}
     <div class="container">
-        Flags page
+        <h1>Flags Management <span class="label label-info">(No actions work yet.)</span></h1>
+        <table class="table table-bordered table-hover">
+            <thead>
+            <tr>
+                <th>Reported By</th>
+                <th>Content</th>
+                <th>Type</th>
+                <th>Date</th>
+                <th>Actions</th>
+                <th>State</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each model}}
+            <tr>
+                <td>{{reporter_user_id}}</td>
+                <td>
+                    {{#if snap_id}}Snap{{/if}}
+                    {{#if event_id}}Event{{/if}}
+                    {{#if listing_id}}Listing{{/if}}
+                </td>
+                <td>
+                    {{#if inappropriate}}Inappropriate{{/if}}
+                    {{#if miscategorized}}Miscategorized{{/if}}
+                    {{#if spam}}Spam{{/if}}
+                </td>
+                <td>{{created}}</td>
+                <td>
+                    <div class="btn-group">
+                        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Action<span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            <li><a {{action 'view'}}>View Content</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#">Delete</a></li>
+                        </ul>
+                    </div>
+                </td>
+                {{#if isError}}
+                <td><span class="label label-important">Error</span></td>
+                {{else}}
+                {{#if isDirty}}
+                <td><span class="label label-warning">Changed</span></td>
+                {{else}}
+                <td><span class="label label-success"><i class="icon-ok icon-white"></i></span></td>
+                {{/if}}
+                {{/if}}
+            </tr>
+            {{/each}}
+            </tbody>
+        </table>
         <hr>
         <footer>
-            <p>&copy; uLink, Inc. 2013.  All Rights Reserved.</p>
+            <p>&copy; uLink, Inc. {{App.year}}.  All Rights Reserved.</p>
         </footer>
     </div> <!-- /container -->
-</script> <!-- /users template -->
+</script> <!-- /flags template -->
 
 <script type="text/x-handlebars" data-template-name="events">
     {{partial navbar}}
@@ -134,16 +269,31 @@
        {{#if isEditing}}
         {{partial 'events/edit'}}
        {{else}}
-        <table class="table table-bordered table-striped table-hover">
+        <h1>Event Management <span class="label label-info">(Save only right now.)</span></h1>
+        <table class="table table-bordered table-hover">
             <thead id="events-table">
-                <tr><th>Active</th><th>Featured</th><th>School</th><th>Title</th><th>Description</th><th>Actions</th><th>State</th></tr>
+                <tr>
+                    <th>Active</th>
+                    <th>Featured</th>
+                    <th>School</th>
+                    <th>Submitted By</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                    <th>State</th>
+                </tr>
+             </thead>
+                <tbody>
                {{#each model}}
-               <tr class="gradeX">
+               <tr>
                    <td>{{view Ember.Checkbox checkedBinding="active"}}</td>
                    <td>{{view Ember.Checkbox checkedBinding="featured"}}</td>
-                   <td>{{school_id}}</td>
+                   <td>{{school_name}}</td>
+                   <td>{{user_name}}</td>
                    <td>{{title}}</td>
                    <td>{{info}}</td>
+                   <td>{{date}}</td>
                     <td>
                         <div class="btn-group">
                             <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">Action<span class="caret"></span></button>
@@ -168,12 +318,12 @@
                        {{/if}}
                 </tr>
                 {{/each}}
-            </thead>
+            </tbody>
         </table>
         {{/if}}
         <hr>
         <footer>
-            <p>&copy; uLink, Inc. 2013.  All Rights Reserved.</p>
+            <p>&copy; uLink, Inc. {{App.year}}.  All Rights Reserved.</p>
         </footer>
     </div> <!-- /container -->
 </script> <!-- /events template -->

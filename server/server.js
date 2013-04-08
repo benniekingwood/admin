@@ -1,16 +1,17 @@
-var path = require('path')
-express = require('express.io')
-app = express().http().io(),
-response = require('./response'),
-passport = require('passport'),
+var path      = require('path')
+express       = require('express.io')
+app           = express().http().io(),
+response      = require('./response'),
+passport      = require('passport'),
 LocalStrategy = require('passport-local').Strategy,
-env = process.env.NODE_ENV || 'development',
-config = require('./config/config')[env],
-mysql      = require('mysql');
+env           = process.env.NODE_ENV || 'development',
+config        = require('./config/config')[env],
+mysql         = require('mysql'),
+crypto        = require('crypto');;
 
 // allowing cross domain functions
 var allowCrossDomain = function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', 'http://localhost:8889');
+    res.header('Access-Control-Allow-Origin', config.ac_allowed_origins);
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
 
@@ -101,16 +102,14 @@ passport.use(new LocalStrategy({
         passwordField: 'password'
     },
     function(username, password, done) {
-        // asynchronous verification, for effect...
-        // TODO: use hash module for password
+        var hashed_pass = crypto.createHash('sha1').update('bennieandthejets'+password).digest('hex');
         process.nextTick(function () {
             var sql = "select id, firstname, lastname, username, image_url, bio from users where " +
                 " is_admin = 1 and email ="+db.escape(username)+
-                " and password = "+ db.escape(password);
-            console.log(sql);
+                " and password = "+ db.escape(hashed_pass);
             db.query(sql, function(err, user) {
-                if (err) {return done(null, false,  {error : "There was an issue with your request." }); }
-                if (!user || user.length==0) { return done(null, false,  {error: 'Invalid Credentials'} ); }
+                if (err) {console.log(err);return done(null, false,  {error : "There was an issue with your request." }); }
+                if (!user || user.length==0) { console.log('no error but no user');return done(null, false,  {error: 'Invalid Credentials'} ); }
                 // set the sid on the user
                 return done(null, user[0]);
             });
