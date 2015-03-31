@@ -7,7 +7,7 @@ LocalStrategy = require('passport-local').Strategy,
 env           = process.env.NODE_ENV || 'development',
 config        = require('./config/config')[env],
 mysql         = require('mysql'),
-crypto        = require('crypto');;
+crypto        = require('crypto');
 
 // allowing cross domain functions
 var allowCrossDomain = function(req, res, next) {
